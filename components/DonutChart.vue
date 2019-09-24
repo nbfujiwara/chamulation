@@ -32,11 +32,7 @@ export default class DonutChart extends Vue {
   }
   drawGraphData(): void {
     const balance = CalculateDao.getBalance()
-    const profit =
-      balance.incomePension +
-      balance.incomeSaving +
-      balance.incomeOther -
-      balance.outcome
+    const profit = balance.profit
     const data = [
       ['年金', balance.incomePension],
       ['貯蓄など', balance.incomeSaving],
@@ -57,9 +53,12 @@ export default class DonutChart extends Vue {
     this.chart.load({
       columns: data
     })
-    d3.select('.c3-chart-arcs-title').text(
-      '老後支出\n' + balance.outcome + '万円'
-    )
+    d3.select('.c3-chart-arcs-title')
+      .text('老後支出')
+      .append('tspan')
+      .attr('dy', 16)
+      .attr('x', 0)
+      .text(balance.outcome + '万円')
   }
 
   mounted() {
@@ -70,6 +69,12 @@ export default class DonutChart extends Vue {
   initChart(): void {
     this.chart = c3.generate({
       bindto: '#donutChart',
+      size: {
+        height: 250
+      },
+      legend: {
+        position: 'right'
+      },
       donut: {
         label: {
           format(value, ratio, id) {
@@ -78,13 +83,32 @@ export default class DonutChart extends Vue {
         },
         title: 'aaa'
       },
+      tooltip: {
+        show: true,
+        format: {
+          value(value, ratio, id, index) {
+            return value + '万円'
+          }
+        }
+      },
       data: {
         type: 'donut',
         columns: [['年金', 0], ['貯蓄など', 0], ['その他収入', 0]],
         order: null,
-        donut: { title: 'bbb' }
+        donut: {
+          title: 'bbb'
+        }
       }
     })
   }
 }
 </script>
+
+<style scoped lang="scss">
+#donutChart {
+  background-color: #e0e0e0;
+}
+#donutChart .c3-chart-arc text {
+  stroke: #000000;
+}
+</style>

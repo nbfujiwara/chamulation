@@ -9,6 +9,7 @@
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
+    "deploy": "yarn build && firebase deploy",
     "lint": "eslint --ext .ts,.vue --ignore-path .gitignore .",
     "test": "jest"
   },

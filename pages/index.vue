@@ -5,7 +5,7 @@
         Chamulation
       </h2>
       <div>
-        <v-btn color="primary" block class="ma-1" to="/form" nuxt>
+        <v-btn color="primary" block class="ma-1" to="/simple-basic" nuxt>
           Start
         </v-btn>
 

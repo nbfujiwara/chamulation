@@ -14,26 +14,36 @@ class Params {
 
 export default class CalculateDao {
   public static getBalance(): IBalance {
+    const outcome = CalculateDao.getOutcome(
+      basicStateModule.marriage,
+      appendixStateModule.outRate,
+      appendixStateModule.dieAge
+    )
+    const incomePension = CalculateDao.getPension(
+      basicStateModule.marriage,
+      appendixStateModule.dieAge,
+      basicStateModule.income,
+      basicStateModule.age
+    )
+    const incomeSaving = CalculateDao.getSaving(
+      basicStateModule.age,
+      basicStateModule.income,
+      basicStateModule.marriage,
+      appendixStateModule.retireAge,
+      appendixStateModule.fortune
+    )
+    const incomeOther = CalculateDao.getOther(appendixStateModule.retireAge)
+    const profit = incomePension + incomeSaving + incomeOther - outcome
+    const restWorkableAge = appendixStateModule.retireAge - basicStateModule.age
+    const recoverLessMonthlyIncome = Math.ceil(-profit / restWorkableAge / 12)
+
     return {
-      outcome: CalculateDao.getOutcome(
-        basicStateModule.marriage,
-        appendixStateModule.outRate,
-        appendixStateModule.dieAge
-      ),
-      incomePension: CalculateDao.getPension(
-        basicStateModule.marriage,
-        appendixStateModule.dieAge,
-        basicStateModule.income,
-        basicStateModule.age
-      ),
-      incomeSaving: CalculateDao.getSaving(
-        basicStateModule.age,
-        basicStateModule.income,
-        basicStateModule.marriage,
-        appendixStateModule.retireAge,
-        appendixStateModule.fortune
-      ),
-      incomeOther: CalculateDao.getOther(appendixStateModule.retireAge)
+      outcome,
+      incomePension,
+      incomeSaving,
+      incomeOther,
+      profit,
+      recoverLessMonthlyIncome
     }
   }
   private static getOutcome(
@@ -151,4 +161,6 @@ export interface IBalance {
   incomePension: number
   incomeSaving: number
   incomeOther: number
+  profit: number
+  recoverLessMonthlyIncome: number
 }
